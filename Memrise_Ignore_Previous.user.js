@@ -2,9 +2,9 @@
 // @name           Memrise Ignore Previous
 // @namespace      https://github.com/cooljingle
 // @description    Lets you ignore the last word you did
-// @match          http://www.memrise.com/course/*/garden/*
-// @match          http://www.memrise.com/garden/review/*
-// @version        0.0.2
+// @match          https://www.memrise.com/course/*/garden/*
+// @match          https://www.memrise.com/garden/review/*
+// @version        0.0.3
 // @updateURL      https://github.com/cooljingle/memrise-ignore-previous/raw/master/Memrise_Ignore_Previous.user.js
 // @downloadURL    https://github.com/cooljingle/memrise-ignore-previous/raw/master/Memrise_Ignore_Previous.user.js
 // @grant          none

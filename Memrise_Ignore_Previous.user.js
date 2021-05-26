@@ -1,12 +1,14 @@
 // ==UserScript==
-// @name           Memrise Ignore Previous
+// @name           Memrise Ignore Word
 // @namespace      https://github.com/cooljingle
-// @description    Lets you ignore the last word you did
+// @description    Lets you ignore the word you're reviewing
 // @match          https://www.memrise.com/course/*/garden/*
 // @match          https://www.memrise.com/garden/review/*
-// @version        0.0.3
-// @updateURL      https://github.com/cooljingle/memrise-ignore-previous/raw/master/Memrise_Ignore_Previous.user.js
-// @downloadURL    https://github.com/cooljingle/memrise-ignore-previous/raw/master/Memrise_Ignore_Previous.user.js
+// @match          https://app.memrise.com/course/*/garden/*
+// @match          https://app.memrise.com/garden/review/*
+// @version        0.0.4
+// @updateURL      https://github.com/cooljingle/memrise-ignore-word/raw/master/Memrise_Ignore_Word.user.js
+// @downloadURL    https://github.com/cooljingle/memrise-ignore-word/raw/master/Memrise_Ignore_Word.user.js
 // @grant          none
 // ==/UserScript==
 
@@ -14,11 +16,10 @@ $(document).ready(function() {
 
     var shortcutKeyCode = 192; //corresponds to ` but you can replace this with your own shortcut key; see http://keycode.info/
 
-    var b = MEMRISE.garden.boxes,
-        ignorePressed = false;
+    let onIgnorePress;
 
-    $('#left-area').append("<a id='ignore-previous'>Ignore Previous Word</a>");
-    $('#ignore-previous').click(function() {
+    $('#left-area').append("<a id='ignore-word'>Ignore Word</a>");
+    $('#ignore-word').click(function() {
         onIgnorePress();
     });
 
@@ -28,25 +29,18 @@ $(document).ready(function() {
         }
     });
 
-    function onIgnorePress() {
-        if(b.num > 0) {
-            MEMRISE.garden.box_types.PresentationBox.prototype.ignore_press.apply(b._list[b.num - 1].thinguser);
-            ignorePressed = true;
-        }
-    }
-
-    //this gets called as part of ignore_press, we want to skip it
-    MEMRISE.garden.boxes.advance = (function() {
-        var cached_function = MEMRISE.garden.boxes.advance;
-        return function() {
-            var skipAdvance = ignorePressed && !b._list[b.num].answered;
-            ignorePressed = false; //reset
-            if(skipAdvance) {
-                var box = b._list[b.num - 1];
-                MEMRISE.garden.stats.show_message("ignored word! " + box.thing.columns[box.thinguser.column_a].val);
-            } else {
-                return cached_function.apply(this, arguments);
-            }
-        };
-    }());
+    MEMRISE.garden._events.start.push(() => {
+        MEMRISE.garden.session.make_box = (function () {
+            var cached_function = MEMRISE.garden.session.make_box;
+            return function() {
+                const { learnable_id } = arguments[0];
+                if(!!learnable_id) {
+                    const presentationBox = cached_function.apply(this, [{learnable_id: learnable_id, template: "presentation"}]);
+                    onIgnorePress = () => presentationBox.ignore_press.apply({learnable_id: learnable_id});
+                }
+                var result = cached_function.apply(this, arguments);
+                return result;
+            };
+        }());
+    });
 });

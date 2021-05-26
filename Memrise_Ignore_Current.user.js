@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name           Memrise Ignore Word
+// @name           Memrise Ignore Current
 // @namespace      https://github.com/cooljingle
-// @description    Lets you ignore the word you're reviewing
+// @description    Lets you ignore the current item you're reviewing
 // @match          https://www.memrise.com/course/*/garden/*
 // @match          https://www.memrise.com/garden/review/*
 // @match          https://app.memrise.com/course/*/garden/*
 // @match          https://app.memrise.com/garden/review/*
 // @version        0.0.4
-// @updateURL      https://github.com/cooljingle/memrise-ignore-word/raw/master/Memrise_Ignore_Word.user.js
-// @downloadURL    https://github.com/cooljingle/memrise-ignore-word/raw/master/Memrise_Ignore_Word.user.js
+// @updateURL      https://github.com/cooljingle/memrise-ignore-current/raw/master/Memrise_Ignore_Current.user.js
+// @downloadURL    https://github.com/cooljingle/memrise-ignore-current/raw/master/Memrise_Ignore_Current.user.js
 // @grant          none
 // ==/UserScript==
 
@@ -18,8 +18,8 @@ $(document).ready(function() {
 
     let onIgnorePress;
 
-    $('#left-area').append("<a id='ignore-word'>Ignore Word</a>");
-    $('#ignore-word').click(function() {
+    $('#left-area').append("<a id='ignore-current'>Ignore</a>");
+    $('#ignore-current').click(function() {
         onIgnorePress();
     });
 
